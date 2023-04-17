@@ -1,6 +1,5 @@
 const { default: mongoose } = require('mongoose');
-const URL =
-  'mongodb+srv://tienco201:12345@e-commerce.kseoucy.mongodb.net/?retryWrites=true&w=majority';
+const URL = process.env.DB_URL_CONNECT;
 
 const dbConnect = async () => {
   try {
