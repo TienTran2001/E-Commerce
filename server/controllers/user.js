@@ -211,8 +211,64 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: response ? true : false,
-    updateUser: response ? response : 'Something went wrong',
+    updatedUser: response ? response : 'Something went wrong',
   });
+});
+
+const updateUserAddress = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  if (!req.body.address) throw new Error('Missing input');
+  const response = await User.findByIdAndUpdate(
+    _id,
+    { $push: { address: req.body.address } },
+    { new: true }
+  );
+  return res.status(200).json({
+    success: response ? true : false,
+    updatedUser: response ? response : 'Cannot update address user',
+  });
+});
+
+const updateCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { pid, quantity, color } = req.body;
+  if (!pid || !quantity || !color) throw new Error('Missing Inputs');
+  const user = await User.findById(_id).select('cart');
+  const hasProduct = user?.cart?.find((el) => el.product.toString() === pid);
+  console.log(hasProduct);
+  if (hasProduct) {
+    if (hasProduct.color === color) {
+      const response = await User.updateOne(
+        { cart: { $elemMatch: hasProduct } },
+        { $set: { 'cart.$.quantity': quantity } },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: response ? true : false,
+        updatedCart: response || 'Cannot update cart product',
+      });
+    } else {
+      const response = await User.findByIdAndUpdate(
+        _id,
+        { $push: { cart: { product: pid, quantity, color } } },
+        { new: true }
+      ).select('firstName lastName cart');
+      return res.status(200).json({
+        success: response ? true : false,
+        updatedCart: response || 'Cannot update cart product',
+      });
+    }
+  } else {
+    const response = await User.findByIdAndUpdate(
+      _id,
+      { $push: { cart: { product: pid, quantity, color } } },
+      { new: true }
+    ).select('firstName lastName cart');
+    return res.status(200).json({
+      success: response ? true : false,
+      updatedCart: response || 'Cannot update cart product',
+    });
+  }
 });
 
 module.exports = {
@@ -227,4 +283,6 @@ module.exports = {
   deleteUser,
   updateUser,
   updateUserByAdmin,
+  updateUserAddress,
+  updateCart,
 };

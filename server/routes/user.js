@@ -12,6 +12,8 @@ router.put('/resetpassword', controller.resetPassword);
 router.get('/', [verifyAccessToken, isAdmin], controller.getUsers);
 router.delete('/', [verifyAccessToken, isAdmin], controller.deleteUser);
 router.put('/current', verifyAccessToken, controller.updateUser);
+router.put('/address', verifyAccessToken, controller.updateUserAddress);
+router.put('/cart', [verifyAccessToken], controller.updateCart);
 router.put('/:uid', [verifyAccessToken, isAdmin], controller.updateUserByAdmin);
 module.exports = router;
 //CRUD create read update delete -> post get put delete
