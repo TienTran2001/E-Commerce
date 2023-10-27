@@ -1,11 +1,15 @@
 import React from 'react';
 import logo from '../assets/logo.png';
 import icons from '../ultils/icons';
+import { Link } from 'react-router-dom';
+import path from '../ultils/path';
 
 const Header = () => {
   return (
     <header className="w-main px-5 h-[110px] flex justify-between items-center py-[35px] ">
-      <img src={logo} className="w-[234px] object-cover " alt="logo" />
+      <Link to={path.HOME}>
+        <img src={logo} className="w-[234px] object-cover " alt="logo" />
+      </Link>
       <div className="flex justify-between items-center ">
         {/* header right item - phone */}
         <div className="header-right-item ">
